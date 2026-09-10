@@ -1,6 +1,7 @@
 import { useGetAllBlogByAdmin } from "@/hooks/useBlog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CircleEllipsis, Rss } from "lucide-react";
+import { BlogoutputType } from "@/typescript/type/blog.input";
 
 const WriterDashboard = () => {
   const { data: allBlogData, isLoading, isError } = useGetAllBlogByAdmin();
@@ -9,7 +10,7 @@ const WriterDashboard = () => {
 
   const totalBlogs = blogs.length;
 
-  const pendingBlog = blogs.filter((blog) => blog.status === "pending").length;
+  const pendingBlog = blogs.filter((blog:BlogoutputType) => blog.status === "pending").length;
 
   if (isError) {
     return (

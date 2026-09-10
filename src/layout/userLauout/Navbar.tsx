@@ -32,7 +32,7 @@ const Navbar = () => {
         toast.success(response.message);
         router.push("/login");
       } else {
-        toast.error(response);
+        toast.error(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -88,7 +88,7 @@ const Navbar = () => {
                 Logout
               </Button>
               <div className="flex gap-2 pl-3">
-                <Image src={data?.data.profile_image} alt="profile" width={30} height={20} className="rounded-full"/>
+                <Image src={data?.data.profile_image || "https://plus.unsplash.com/premium_photo-1739786996022-5ed5b56834e2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FydG9vbiUyMGJveXxlbnwwfHwwfHx8MA%3D%3D"} alt="profile" width={30} height={20} className="rounded-full"/>
                 <div>
                   <h1 className="text-gray-400 text-xs">{data?.data?.name}</h1>
                   <h1 className="text-gray-600 text-xs">{data?.data?.email}</h1>

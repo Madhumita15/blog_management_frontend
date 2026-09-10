@@ -28,9 +28,9 @@ const WriterBlogManagement = () => {
               + Add Blog
             </Button>
             <BlogDialog
-              categoryData={categoryData.data}
+              categoryData={categoryData?.data || []}
               open={open}
-              allBlogData={allBlogData.data}
+              allBlogData={allBlogData?.data || []}
               setOpen={setOpen}
               isEdit={isEdit}
               setIsEdit={setIsEdit}
@@ -38,7 +38,7 @@ const WriterBlogManagement = () => {
           </div>
         </div>
         <BlogTable
-          allBlogData={allBlogData.data}
+          allBlogData={allBlogData?.data || []}
           isLoading={isLoading}
           isError={isError}
           error={error}

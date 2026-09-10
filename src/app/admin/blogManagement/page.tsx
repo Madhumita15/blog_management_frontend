@@ -21,10 +21,10 @@ const BlogManagement = () => {
             <Button   onClick={() => setOpen(true)} className={"cursor-pointer bg-pink-700 text-white hover:bg-slate-900 hover:text-pink-200 hover:border-2 hover:border-white border-2 border-black  px-3 py-1 font-bold rounded-md"}>
               + Add Blog
             </Button>
-            <BlogDialog categoryData={categoryData?.data} open={open} setOpen={setOpen} isEdit={isEdit} setIsEdit={setIsEdit} allBlogData={allBlogData?.data} />
+            <BlogDialog categoryData={categoryData?.data || []} open={open} setOpen={setOpen} isEdit={isEdit} setIsEdit={setIsEdit} allBlogData={allBlogData?.data || []} />
           </div>
         </div>
-        <BlogTable  setIsEdit={setIsEdit} setOpen={setOpen} allBlogData={allBlogData?.data} isLoading={isLoading} isError={isError} error={error}/>
+        <BlogTable  setIsEdit={setIsEdit} setOpen={setOpen} allBlogData={allBlogData?.data || []} isLoading={isLoading} isError={isError} error={error}/>
       </div>
     </>
   );

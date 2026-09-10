@@ -19,8 +19,8 @@ import Image from "next/image";
 
 const Sidebar = () => {
   const pathName = usePathname();
-  const { loading, logout, role } = useAuthStore();
-  const { data } = useGetProfile();
+  const { loading, logout, role, accessToken } = useAuthStore();
+  const { data } = useGetProfile(!!accessToken);
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -30,7 +30,7 @@ const Sidebar = () => {
         toast.success(response.message);
         router.push("/login");
       } else {
-        toast.error(response);
+        toast.error(response.message);
       }
     } catch (error) {
       console.log(error);

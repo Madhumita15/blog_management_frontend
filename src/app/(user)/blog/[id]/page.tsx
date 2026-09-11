@@ -13,21 +13,31 @@ import Image from "next/image";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllBlogByUserById } from "@/hooks/useBlog";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen, Heart } from "lucide-react";
+import { useGetMyLike, useLike } from "@/hooks/useLike";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "sonner";
+import { LikeType } from "@/typescript/type/like.type";
 
 const BlogById = () => {
   const { id } = useParams();
   const router = useRouter();
+  const { accessToken, role } = useAuthStore();
+  const { mutate: likeMutate } = useLike();
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-  } = useGetAllBlogByUserById(id as string);
+  const { data, isLoading, isError, error } = useGetAllBlogByUserById(
+    id as string,
+  );
+  const { data: likeData } = useGetMyLike();
+  const isLiked = likeData?.data?.some((like: LikeType) => like.blogId === id);
 
-  console.log("data", data);
+  const handleLikeUnlike = (blogId: string) => {
+    if (!accessToken && role !== "user") {
+      toast.success("Please Login first to like a blog");
+      return;
+    }
+    likeMutate(blogId);
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -61,8 +71,8 @@ const BlogById = () => {
           </h1>
 
           <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">
-            Take a deeper look into the experiences, tutorials, and
-            knowledge shared by our SkillSwap community.
+            Take a deeper look into the experiences, tutorials, and knowledge
+            shared by our SkillSwap community.
           </p>
         </div>
       </div>
@@ -102,6 +112,19 @@ const BlogById = () => {
                 <Badge className="border border-pink-500/40 bg-pink-600 px-4 py-1.5 text-sm font-semibold text-white shadow-lg shadow-pink-950/40 hover:bg-pink-600">
                   {data?.data?.category.name}
                 </Badge>
+                <Button
+                  onClick={() => handleLikeUnlike(id as string)}
+                  className={`ml-4 ${
+                    isLiked
+                      ? "bg-pink-500 hover:bg-pink-600"
+                      : "bg-gray-700 hover:bg-gray-600"
+                  } cursor-pointer`}
+                >
+                  <Heart
+                    size={25}
+                    className={isLiked ? " fill-white" : "text-white"}
+                  />
+                </Button>
               </div>
             </div>
 

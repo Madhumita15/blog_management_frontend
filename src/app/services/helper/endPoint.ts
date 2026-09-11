@@ -18,5 +18,8 @@ export const ENDPOINT = {
   category: {
     create: "/categories",
     get: "/category"
+  },
+  like: {
+    create: "/like"
   }
 };

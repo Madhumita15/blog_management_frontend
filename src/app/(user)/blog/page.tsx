@@ -15,12 +15,27 @@ import Image from "next/image";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import { BlogoutputType } from "@/typescript/type/blog.input";
+import { Heart } from "lucide-react";
+import { useGetMyLike, useLike } from "@/hooks/useLike";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "sonner";
+import { LikeType } from "@/typescript/type/like.type";
 
 const Blog = () => {
-  const { data: allBlog, isLoading, isError, error } =
-    useGetAllBlogByUser();
+  const { data: allBlog, isLoading, isError, error } = useGetAllBlogByUser();
+  const { accessToken, role } = useAuthStore();
+  const { mutate: likeMutate } = useLike();
+  const { data: likeData } = useGetMyLike();
 
   const router = useRouter();
+
+  const handleLikeUnlike = (blogId: string) => {
+    if (!accessToken && role !== "user") {
+      toast.success("Please Login first to like a blog");
+      return;
+    }
+    likeMutate(blogId);
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -38,8 +53,8 @@ const Blog = () => {
         </h1>
 
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
-          Discover useful ideas, tutorials, experiences, and knowledge
-          shared by our community of learners and creators.
+          Discover useful ideas, tutorials, experiences, and knowledge shared by
+          our community of learners and creators.
         </p>
 
         <div className="mx-auto mt-6 h-px max-w-24 bg-linear-to-r from-transparent via-pink-600 to-transparent" />
@@ -53,62 +68,82 @@ const Blog = () => {
           </div>
         ) : isError ? (
           <div className="col-span-full rounded-xl border border-red-900/50 bg-slate-900 p-8 text-center">
-            <p className="text-sm text-red-400">{error.message || "Failed to load blogs"}</p>
+            <p className="text-sm text-red-400">
+              {error.message || "Failed to load blogs"}
+            </p>
           </div>
         ) : (
-          allBlog?.data?.map((blog:BlogoutputType) => (
-            <Card
-              key={blog._id}
-              className="group relative mx-auto w-full max-w-md overflow-hidden border-slate-800 bg-slate-900/80 py-0 shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-pink-700/60 hover:shadow-pink-950/30"
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden">
-                <div className="absolute inset-0 z-10 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
+          allBlog?.data?.map((blog: BlogoutputType) => {
+            const isLiked = likeData?.data?.some(
+              (like: LikeType) => like.blogId === blog._id,
+            );
+            return (
+              <Card
+                key={blog._id}
+                className="group relative mx-auto w-full max-w-md overflow-hidden border-slate-800 bg-slate-900/80 py-0 shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-pink-700/60 hover:shadow-pink-950/30"
+              >
+                {/* Image */}
+                <div className="relative overflow-hidden">
+                  <div className="absolute inset-0 z-10 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
 
-                <Image
-                  src={blog.blog_image}
-                  width={600}
-                  height={350}
-                  alt={blog.title}
-                  className="aspect-video w-full object-cover transition duration-500 group-hover:scale-105"
-                />
+                  <Image
+                    src={blog.blog_image}
+                    width={600}
+                    height={350}
+                    alt={blog.title}
+                    className="aspect-video w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
 
-                {/* Category */}
-                <div className="absolute left-4 top-4 z-20">
-                  <Badge className="border border-pink-500/30 bg-pink-600/90 px-3 py-1 text-white shadow-lg shadow-pink-950/30 backdrop-blur-sm hover:bg-pink-600">
-                    {blog.category.name}
-                  </Badge>
+                  {/* Category */}
+                  <div className="absolute left-4 top-4 z-20">
+                    <Badge className="border border-pink-500/30 bg-pink-600/90 px-3 py-1 text-white shadow-lg shadow-pink-950/30 backdrop-blur-sm hover:bg-pink-600">
+                      {blog.category.name}
+                    </Badge>
+                  </div>
+                  <Button
+                    className={`absolute right-4 top-4 z-20 cursor-pointer ${
+                      isLiked
+                        ? "bg-pink-500 hover:bg-pink-600"
+                        : "bg-gray-700 hover:bg-gray-600"
+                    }`}
+                    onClick={() => handleLikeUnlike(blog._id)}
+                  >
+                    <Heart
+                      size={25}
+                      className={isLiked ? " fill-white" : "text-white"}
+                    />
+                  </Button>
                 </div>
-              </div>
 
-              {/* Content */}
-              <CardHeader className="space-y-3 px-5 pt-5">
-                <CardAction>
-                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                    Featured Article
-                  </span>
-                </CardAction>
+                {/* Content */}
+                <CardHeader className="space-y-3 px-5 pt-5">
+                  <CardAction>
+                    <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
+                      Featured Article
+                    </span>
+                  </CardAction>
 
-                <CardTitle className="line-clamp-2 text-xl font-bold text-white transition-colors group-hover:text-pink-400">
-                  {blog.title}
-                </CardTitle>
+                  <CardTitle className="line-clamp-2 text-xl font-bold text-white transition-colors group-hover:text-pink-400">
+                    {blog.title}
+                  </CardTitle>
 
-                <CardDescription className="line-clamp-3 text-sm leading-6 text-slate-400">
-                  {blog.content}
-                </CardDescription>
-              </CardHeader>
+                  <CardDescription className="line-clamp-3 text-sm leading-6 text-slate-400">
+                    {blog.content}
+                  </CardDescription>
+                </CardHeader>
 
-              {/* Button */}
-              <CardFooter className="px-5 pb-5 pt-2">
-                <Button
-                  className="w-full cursor-pointer border border-pink-600/50 bg-pink-700 text-white transition-all duration-300 hover:border-pink-500 hover:bg-pink-600 hover:shadow-lg hover:shadow-pink-900/30"
-                  onClick={() => router.push(`/blog/${blog._id}`)}
-                >
-                  Read Article
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
+                {/* Button */}
+                <CardFooter className="px-5 pb-5 pt-2">
+                  <Button
+                    className="w-full cursor-pointer border border-pink-600/50 bg-pink-700 text-white transition-all duration-300 hover:border-pink-500 hover:bg-pink-600 hover:shadow-lg hover:shadow-pink-900/30"
+                    onClick={() => router.push(`/blog/${blog._id}`)}
+                  >
+                    Read Article
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })
         )}
       </div>
     </div>

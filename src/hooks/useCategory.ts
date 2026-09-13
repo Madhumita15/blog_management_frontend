@@ -4,14 +4,14 @@ import {
   getAllCategory,
   updateCategory,
 } from "@/app/services/helper/api-function/category.function";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["createCategory"],
-    mutationFn: (data: { name: string  }) => createCategory(data),
+    mutationFn: (data: { name: string }) => createCategory(data),
     onSuccess: (res) => {
       console.log(res);
       if (res.status === true) {
@@ -29,7 +29,6 @@ export const useGetAllCategory = () => {
   return useQuery({
     queryKey: ["getAllCategory"],
     queryFn: getAllCategory,
-    
   });
 };
 

@@ -1,38 +1,23 @@
 import { useGetAllBlogByAdmin, useGetAllPendingBlog } from "@/hooks/useBlog";
 import { useGetAllCategory } from "@/hooks/useCategory";
 import { useGetPendingRequest } from "@/hooks/useWriterRequest";
-import {
-  ChartBarStacked,
-  CircleEllipsis,
-  Rss,
-  User,
-} from "lucide-react";
+import { ChartBarStacked, CircleEllipsis, Rss, User } from "lucide-react";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DashboardPagination } from "@/typescript/interface/pagination.interface";
 
-const AdminDashboard:React.FC<DashboardPagination> = ({page, limit}) => {
- 
-  const {
-    data: totalBlogData,
-    isLoading: isPendingBlogData,
-  } = useGetAllBlogByAdmin({page, limit});
+const AdminDashboard: React.FC<DashboardPagination> = ({ page, limit }) => {
+  const { data: totalBlogData, isLoading: isPendingBlogData } =
+    useGetAllBlogByAdmin({ page, limit });
 
-  const {
-    data: totalPendingBlogData,
-    isLoading: isLoadingPendingBlogData,
-  } = useGetAllPendingBlog({ status: "pending", page, limit });
+  const { data: totalPendingBlogData, isLoading: isLoadingPendingBlogData } =
+    useGetAllPendingBlog({ status: "pending", page, limit });
 
-  const {
-    data: totalCategoryData,
-    isLoading: isPendingCategoryData,
-  } = useGetAllCategory();
+  const { data: totalCategoryData, isLoading: isPendingCategoryData } =
+    useGetAllCategory();
 
-  const {
-    data: totalPendingRequestData,
-    isLoading: isPendingRequestData,
-  } = useGetPendingRequest();
-
+  const { data: totalPendingRequestData, isLoading: isPendingRequestData } =
+    useGetPendingRequest();
 
   const stats = [
     {
@@ -49,7 +34,7 @@ const AdminDashboard:React.FC<DashboardPagination> = ({page, limit}) => {
     },
     {
       name: "Total Category",
-      count: totalCategoryData?.totalCategory || 0,
+      count: totalCategoryData?.data?.length || 0,
       icon: ChartBarStacked,
       loading: isPendingCategoryData,
     },

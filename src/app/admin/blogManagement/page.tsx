@@ -1,6 +1,7 @@
 "use client";
 
 import BlogDialog from "@/components/blog/BlogDialog";
+import BlogPagination from "@/components/blog/BlogPagination";
 import BlogTable from "@/components/blog/BlogTable";
 import { useGetAllBlogByAdmin } from "@/hooks/useBlog";
 import { useGetAllCategory } from "@/hooks/useCategory";
@@ -10,7 +11,9 @@ import { useState } from "react";
 const BlogManagement = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<string | null>(null)
-  const { data: allBlogData, isLoading, isError,error } = useGetAllBlogByAdmin();
+  const [page, setPage] = useState<number>(1)
+  const [limit, setLimit] = useState<number>(5)
+  const { data: allBlogData, isLoading, isError,error } = useGetAllBlogByAdmin({page, limit});
    const { data: categoryData } = useGetAllCategory();
   return (
     <>
@@ -25,6 +28,7 @@ const BlogManagement = () => {
           </div>
         </div>
         <BlogTable  setIsEdit={setIsEdit} setOpen={setOpen} allBlogData={allBlogData?.data || []} isLoading={isLoading} isError={isError} error={error}/>
+        <BlogPagination page={page} limit={limit} setPage={setPage} setLimit={setLimit} />
       </div>
     </>
   );

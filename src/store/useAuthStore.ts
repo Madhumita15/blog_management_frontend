@@ -44,20 +44,20 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
       // console.log("response from loginUser", response);
       if (response.data.status === true) {
         setCookie("user", JSON.stringify(response.data.data), {
-          maxAge: 30 * 24 * 60 * 60,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         });
         setCookie("role", response.data.data.role, {
-          maxAge: 30 * 24 * 60 * 60,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         });
         setCookie("accessToken", response.data.accessToken, {
-          maxAge: 1 * 24 * 60 * 60,
+          maxAge: 1 * 24 * 60 * 60 * 1000,
         });
         setCookie("refreshToken", response.data.refreshToken, {
-          maxAge: 30 * 24 * 60 * 60,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         });
         if (response.data.secretKey) {
           setCookie("secretKey", response.data.secretKey, {
-            maxAge: 30 * 24 * 60 * 60,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
           });
         }
         set({

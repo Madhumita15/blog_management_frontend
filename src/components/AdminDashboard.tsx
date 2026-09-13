@@ -9,17 +9,19 @@ import {
 } from "lucide-react";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardPagination } from "@/typescript/interface/pagination.interface";
 
-const AdminDashboard = () => {
+const AdminDashboard:React.FC<DashboardPagination> = ({page, limit}) => {
+ 
   const {
     data: totalBlogData,
     isLoading: isPendingBlogData,
-  } = useGetAllBlogByAdmin();
+  } = useGetAllBlogByAdmin({page, limit});
 
   const {
     data: totalPendingBlogData,
     isLoading: isLoadingPendingBlogData,
-  } = useGetAllPendingBlog({ status: "pending" });
+  } = useGetAllPendingBlog({ status: "pending", page, limit });
 
   const {
     data: totalCategoryData,
@@ -31,22 +33,23 @@ const AdminDashboard = () => {
     isLoading: isPendingRequestData,
   } = useGetPendingRequest();
 
+
   const stats = [
     {
       name: "Total Blogs",
-      count: totalBlogData?.data?.length || 0,
+      count: totalBlogData?.totalBlogs,
       icon: Rss,
       loading: isPendingBlogData,
     },
     {
       name: "Total Pending Blogs",
-      count: totalPendingBlogData?.data?.length || 0,
+      count: totalPendingBlogData?.totalBlogs || 0,
       icon: CircleEllipsis,
       loading: isLoadingPendingBlogData,
     },
     {
       name: "Total Category",
-      count: totalCategoryData?.data?.length || 0,
+      count: totalCategoryData?.totalCategory || 0,
       icon: ChartBarStacked,
       loading: isPendingCategoryData,
     },

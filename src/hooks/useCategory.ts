@@ -4,7 +4,7 @@ import {
   getAllCategory,
   updateCategory,
 } from "@/app/services/helper/api-function/category.function";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useCreateCategory = () => {
@@ -29,6 +29,7 @@ export const useGetAllCategory = () => {
   return useQuery({
     queryKey: ["getAllCategory"],
     queryFn: getAllCategory,
+    
   });
 };
 

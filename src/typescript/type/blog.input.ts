@@ -2,7 +2,14 @@ export type BlogType = {
   title: string;
   content: string;
   category: string;
-  blog_image: File | string | null;
+  blog_image?: File | null;
+};
+
+export type UpdateBlogType = {
+  title: string;
+  content: string;
+  category: string;
+  blog_image?: File | string | null;
 };
 
 

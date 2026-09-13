@@ -2,9 +2,13 @@ import { useGetAllBlogByAdmin } from "@/hooks/useBlog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CircleEllipsis, Rss } from "lucide-react";
 import { BlogoutputType } from "@/typescript/type/blog.input";
+import React from "react";
+import { DashboardPagination } from "@/typescript/interface/pagination.interface";
 
-const WriterDashboard = () => {
-  const { data: allBlogData, isLoading, isError } = useGetAllBlogByAdmin();
+
+
+const WriterDashboard:React.FC<DashboardPagination> = ({page, limit}) => {
+  const { data: allBlogData, isLoading, isError } = useGetAllBlogByAdmin({page, limit});
 
   const blogs = allBlogData?.data ?? [];
 

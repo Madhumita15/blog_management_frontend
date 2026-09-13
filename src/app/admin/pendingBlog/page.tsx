@@ -18,16 +18,27 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { BlogoutputType } from "@/typescript/type/blog.input";
+import BlogPagination from "@/components/blog/BlogPagination";
 
 const PendingBlog = () => {
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
   const { data, isLoading, isError, error } = useGetAllPendingBlog({
     status: "pending",
+    page: page,
+    limit: limit,
   });
   const [isPendingId, setIsPendingId] = useState<string | null>(null);
   const { mutate: pendingMutateBlog, isPending } =
     useUpdatePendingBlogByAdmin();
 
-  const handleBlogPending = ({ id, status }: {id: string, status: string}) => {
+  const handleBlogPending = ({
+    id,
+    status,
+  }: {
+    id: string;
+    status: string;
+  }) => {
     setIsPendingId(id);
     pendingMutateBlog({ id, status });
   };
@@ -79,7 +90,7 @@ const PendingBlog = () => {
             </TableRow>
           ) : (
             <>
-              {data?.data?.map((blog:BlogoutputType) => (
+              {data?.data?.map((blog: BlogoutputType) => (
                 <TableRow key={blog._id}>
                   <TableCell className="font-medium">
                     <Image
@@ -139,6 +150,12 @@ const PendingBlog = () => {
           )}
         </TableBody>
       </Table>
+      <BlogPagination
+        page={page}
+        limit={limit}
+        setPage={setPage}
+        setLimit={setLimit}
+      />
     </div>
   );
 };

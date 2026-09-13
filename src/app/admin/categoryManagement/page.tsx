@@ -8,6 +8,7 @@ import { useState } from "react";
 const CategoryManagement = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<string | null>(null);
+  
   return (
     <>
       <div className="p-10 text-white">

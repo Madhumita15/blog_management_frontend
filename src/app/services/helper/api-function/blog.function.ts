@@ -3,9 +3,9 @@ import { ENDPOINT } from "../endPoint";
 import { getErrorMessage } from "../global.helper";
 
 
-export const getAllBlogByAdmin = async () => {
+export const getAllBlogByAdmin = async ({page, limit, signal}: {page: number, limit: number, signal: AbortSignal}) => {
   try {
-    const response = await axiosInstance.get(`${ENDPOINT.blog.adminBlogs}`);
+    const response = await axiosInstance.get(`${ENDPOINT.blog.adminBlogs}`, {params: {page: page, limit: limit}, signal});
     return response.data;
   } catch (error) {
     throw getErrorMessage(error)
@@ -79,9 +79,9 @@ export const deleteBlog = async (id:string) => {
 };
 
 
-export const getAllPendingBlogByAdmin = async(status: string)=>{
+export const getAllPendingBlogByAdmin = async({status, page, limit, signal}: {status: string, page: number, limit: number, signal: AbortSignal})=>{
   try {
-    const response = await axiosInstance.get(`${ENDPOINT.blog.adminBlogs}`, {params: {status: status}})
+    const response = await axiosInstance.get(`${ENDPOINT.blog.adminBlogs}`, {params: {status: status, page: page, limit:limit}, signal})
     return response.data
   } catch (error) {
     throw getErrorMessage(error)

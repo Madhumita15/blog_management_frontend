@@ -8,13 +8,15 @@ import {
   updateBlog,
   updatePendingBlogByAdmin,
 } from "@/app/services/helper/api-function/blog.function";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useGetAllBlogByAdmin = () => {
+export const useGetAllBlogByAdmin = ({page, limit}: {page: number, limit: number}) => {
   return useQuery({
-    queryKey: ["getAllBlog"],
-    queryFn: getAllBlogByAdmin,
+    queryKey: ["getAllBlog", page, limit],
+    queryFn: ({signal})=> getAllBlogByAdmin({page, limit, signal}),
+    placeholderData: keepPreviousData
+    
   });
 };
 
@@ -80,10 +82,11 @@ export const useDeleteBlog = () => {
 };
 
 
-export const useGetAllPendingBlog = ({status}: {status: string}) =>{
+export const useGetAllPendingBlog = ({status, page, limit}: {status: string, page: number, limit: number}) =>{
   return useQuery({
-    queryKey: ["getAllPendingBlog", status],
-    queryFn: ()=> getAllPendingBlogByAdmin(status)
+    queryKey: ["getAllPendingBlog", status, page, limit],
+    queryFn: ({signal})=> getAllPendingBlogByAdmin({status, page, limit, signal}),
+    placeholderData: keepPreviousData
 
   })
 }

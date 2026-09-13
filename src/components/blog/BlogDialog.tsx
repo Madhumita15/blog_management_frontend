@@ -12,7 +12,7 @@ import { blogInput } from "@/app/services/json/inputData/blog.input";
 import DynamicInput from "../DynamicInput";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { blogSchema, updateblogSchema } from "@/app/services/validation/blog.validation";
+import { blogSchema } from "@/app/services/validation/blog.validation";
 import { BlogType } from "@/typescript/type/blog.input";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -47,7 +47,7 @@ const BlogDialog:React.FC<BlogDialogType> = ({
     formState: { errors },
     reset,
   } = useForm<BlogType>({
-    resolver: yupResolver(isEdit ? updateblogSchema : blogSchema),
+    resolver: yupResolver(blogSchema),
     defaultValues: {
       title: "",
       content: "",
